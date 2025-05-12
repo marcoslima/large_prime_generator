@@ -1,0 +1,8 @@
+[project]
+name = "prime-number-generator"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "gmpy2>=2.2.1",
+]
