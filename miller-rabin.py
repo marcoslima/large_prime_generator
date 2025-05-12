@@ -1,5 +1,7 @@
 import random
 import argparse
+from math import ceil, log10
+
 from gmpy2 import powmod
 
 # first 100 primes
@@ -69,24 +71,21 @@ def miller_rabin(n, k):
     return True
 
 
-def generate_prime(num_digits, k=10):
-    # generate a random odd number with num_digits digits
-    def generate_random():
-        min_n_digit_number = 10 ** (num_digits - 1)
-        max_n_digit_number = 10 ** num_digits - 1
-        while True:
-            n = random.randint(min_n_digit_number, max_n_digit_number)
-            if n % 10 in {1, 3, 7, 9}:
-                return n
+def generate_random(num_digits):
+    min_n_digit_number = 10 ** (num_digits - 2)
+    max_n_digit_number = 10 ** (num_digits - 1) - 1
+    last_digit = random.choice([1, 3, 7, 9])
+    n = random.randint(min_n_digit_number, max_n_digit_number)
+    return n * 10 + last_digit
 
+
+def generate_prime(num_digits, k=10):
     # generate random numbers with num_digits digits until a prime is found.
     # Expected iterations is O(num_digits) due to the prime number theorem!
-    i = 0
     expected = int(2.3 * num_digits)
-    while True:
-        i += 1
+    for i in range(1, expected):
         print(f"""iteration: {i} (expected <= {expected} total due to PNT)""")
-        n = generate_random()
+        n = generate_random(num_digits)
         if miller_rabin(n, k):
             return n
 
@@ -98,6 +97,6 @@ args = parser.parse_args()
 n = args.n
 k = 10
 confidence = 100 * (1 - 0.25 ** k)
-print("\n\n\n")
-print(generate_prime(n, k=k))
-print(f"is prime with {confidence}% confidence")
+n = generate_prime(n, k=k)
+print(n)
+print(f"is {ceil(log10(n))} digits prime with {confidence}% confidence")
