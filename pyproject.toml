@@ -5,4 +5,5 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "gmpy2>=2.2.1",
+    "progress>=1.6",
 ]

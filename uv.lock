@@ -36,7 +36,17 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "gmpy2" },
+    { name = "progress" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "gmpy2", specifier = ">=2.2.1" }]
+requires-dist = [
+    { name = "gmpy2", specifier = ">=2.2.1" },
+    { name = "progress", specifier = ">=1.6" },
+]
+
+[[package]]
+name = "progress"
+version = "1.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2a/68/d8412d1e0d70edf9791cbac5426dc859f4649afc22f2abbeb0d947cf70fd/progress-1.6.tar.gz", hash = "sha256:c9c86e98b5c03fa1fe11e3b67c1feda4788b8d0fe7336c2ff7d5644ccfba34cd", size = 7842 }
