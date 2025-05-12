@@ -1,23 +1,23 @@
 import argparse
+from random import choice
 
 from gmpy2 import mpz_random, random_state
 from progress.bar import ShadyBar
 
 
 class App:
-    def __init__(self, num_digits, miller_rabin_iterations=10):
-        self.rs = random_state(42)
+    def __init__(self, num_digits, miller_rabin_iterations=10, seed=42):
+        self.rs = random_state(seed)
         self.num_digits = num_digits
         self.miller_rabin_iterations = miller_rabin_iterations
 
     def generate_random(self):
-        min_n_digit_number = 10 ** (self.num_digits - 1)
-        max_n_digit_number = 10 ** self.num_digits - 1
-        delta = max_n_digit_number - min_n_digit_number
-        while True:
-            n = min_n_digit_number + mpz_random(self.rs, delta)
-            if n % 10 in {1, 3, 7, 9}:
-                return n
+        lower_num = 10 ** (self.num_digits - 2)
+        upper_num = 10 ** (self.num_digits - 1) - 1
+        delta = upper_num - lower_num
+        last_digit = choice([1, 3, 7, 9])
+        n = lower_num + mpz_random(self.rs, delta)
+        return n * 10 + last_digit
 
     def generate_prime(self):
         # generate random numbers with num_digits digits until a prime is found.
@@ -37,18 +37,39 @@ class App:
 
     def run(self):
         confidence = 100 * (1 - 0.25 ** self.miller_rabin_iterations)
-        print(self.generate_prime())
+        prime = self.generate_prime()
+        print(prime)
         print(f"is prime with {confidence}% confidence")
+        print(f'{len(prime.digits())} digits')
 
 
 def main():
-    # Parse the number of digits from the command line
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-n', type=int, required=True, help="# of digits")
+    parser = _get_parser()
     args = parser.parse_args()
-    n = args.n
-    app = App(n, 10)
+    n = args.digits
+    seed = args.seed
+    k = args.iterations
+    app = App(n, k, seed)
     app.run()
+
+
+def _get_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--digits',
+                        type=int,
+                        required=True,
+                        help="# of digits")
+    parser.add_argument('-i', '--iterations',
+                        type=int,
+                        required=False,
+                        default=10,
+                        help="# of Miller-Rabin iterations")
+    parser.add_argument('-s', '--seed',
+                        type=int,
+                        required=False,
+                        default=42,
+                        help="seed for random number generation")
+    return parser
 
 
 if __name__ == '__main__':
