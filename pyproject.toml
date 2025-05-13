@@ -3,3 +3,6 @@ name = "prime-number-generator"
 version = "0.1.0"
 description = "A large prime number generator using the Miller-Rabin primality test."
 requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.2.5",
+]
